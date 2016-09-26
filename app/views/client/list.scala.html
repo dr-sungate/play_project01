@@ -1,0 +1,83 @@
+@(message: String, applicationId: Long, clients: List[((models.TablesExtend.ClientsRow,models.TablesExtend.ContractsRow),models.TablesExtend.ContractAddressesRow)], formclientssearch: Form[models.TablesExtend.ClientsSearchRow], agencyList: Seq[(String, String)], applicationList: Seq[(String, String)], page: utilities.PageNation[_])(implicit messages: Messages,request: RequestHeader)
+@import helper._
+@implicitFC = @{ b4.horizontal.fieldConstructor("col-md-2", "col-md-10") }
+
+@main("一覧画面"){
+@views.html.globalnavi()	
+}{
+            <div class="row">
+                <div class="col-lg-12">
+                    <h2 class="page-header">クライアント管理</h2>
+                </div>
+             </div>
+			<div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            [ @utilities.ViewHelper.getOptionView(applicationId.toString, applicationList.toMap) ] クライアント一覧
+                        </div>
+				       <div class="panel-body">
+				            <div class="col-md-10 col-md-offset-1">
+				    @b4.inline.form(action=admin.routes.ClientController.index(applicationId, 1)) {implicit ifc =>
+				        @CSRF.formField
+						@views.html.client.searchform(applicationId, formclientssearch,agencyList)
+@b4.submit('class -> "btn btn-primary"){<span class="glyphicon glyphicon-search"></span> 検索}
+						
+				 
+				    }
+				    </div>
+				    </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+                        @views.html.client.pageNation(applicationId, page, "")
+                            <div class="dataTable_wrapper">
+                                <table class="table table-hover table-condensed">
+                                   <thead>
+                                        <tr>
+                                            <th>アプリ側ID</th>
+                                            <th>クライアント名</th>
+                                            <th>メール</th>
+                                            <th>会社名</th>
+                                            <th>種別</th>
+                                            <th>ステータス</th>
+                                            <th>契約ステータス</th>
+                                            <th>代理店</th>
+                                            <th></th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    @for(((client, contract),contractaddress) <- clients) {
+                                        <tr class="odd">
+                                          <td>@client.appClientId</td>
+                                          <td>@client.name</td>
+                                          <td>@client.email</td>
+                                          <td>@contractaddress.company</td>
+                                          <td>@utilities.ViewHelper.getOptionView(client.role.getOrElse(""),utilities.ViewHelper.makeOptionMap(utilities.`type`.ClientRoleType.typeSeq, "view.client.clientroletype", messages))</td>
+                                          <td><span class="@utilities.ViewHelper.getOptionView(client.status,utilities.ViewHelper.makeOptionMap(utilities.status.ClientStatus.statusSeq, "view.client.statuscolor", messages))">@utilities.ViewHelper.getOptionView(client.status,utilities.ViewHelper.makeOptionMap(utilities.status.ClientStatus.statusSeq, "view.client.status", messages))</span></td>
+                                          <td><span class="@utilities.ViewHelper.getOptionView(contract.status,utilities.ViewHelper.makeOptionMap(utilities.status.ContractStatus.statusSeq, "view.contract.statuscolor", messages))">@utilities.ViewHelper.getOptionView(contract.status,utilities.ViewHelper.makeOptionMap(utilities.status.ContractStatus.statusSeq, "view.contract.status", messages))</span></td>
+                                          <td><a href="@admin.routes.AgencyController.view(applicationId, client.agencyId)"><span class="glyphicon glyphicon-send"></span> @utilities.ViewHelper.getOptionView(client.agencyId.toString,agencyList.toMap)</a></td>
+                                           <td><a href="@admin.routes.ClientController.view(applicationId, client.agencyId, client.id)" class="btn btn-outline btn-info btn-xs"><span class="glyphicon glyphicon-info-sign"></span> 詳細</a></td>
+                                          <td>@b4.inline.form(action=admin.routes.ClientController.delete(applicationId, client.id)) {implicit ifc =>
+                                              @CSRF.formField
+                                              @b4.submit('class -> "btn btn-outline btn-warning btn-xs", 'onclick -> "return confirm(\"削除してよろしいですか？\");" ){<span class="glyphicon glyphicon-remove-sign"></span> 削除}}</td>
+                                        </tr>
+                                        }
+                                   </tbody>
+                                </table>
+                            </div>
+                            @views.html.client.pageNation(applicationId, page, "")
+<div class="well">
+<a href="@admin.routes.ClientController.add(applicationId)" class="btn btn-success"><span class="glyphicon glyphicon-save-file"></span> 新規登録</a>
+</div>
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+                    <!-- /.panel -->
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+
+
+ 
+ }

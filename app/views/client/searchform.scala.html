@@ -1,0 +1,29 @@
+@(applicationId: Long, formclientssearch: Form[models.TablesExtend.ClientsSearchRow], agencyList: Seq[(String, String)])(implicit messages: Messages)
+
+@import helper._
+@import play.api.i18n.Messages
+@import utilities._
+@implicitFC = @{ b4.vertical.fieldConstructor }
+@{val customeurl = "data-uri"}
+
+
+
+@if(formclientssearch.hasErrors) {
+@*
+<div class="form-group">
+    <div class="alert alert-danger col-lg-6 text-center">
+       @for(error <- formclientssearch.errors){
+         @error<br />
+       }
+   </div>
+</div>
+*@
+}
+	@b4.select( formclientssearch("agencyId"), options = Seq("-1" -> "") ++ agencyList, '_label -> "代理店" )
+	@b4.select( formclientssearch("role"), options = Seq("-1" -> "") ++ utilities.ViewHelper.makeOptionSeq(utilities.`type`.ClientRoleType.typeSeq, "view.client.clientroletype", messages), '_label -> "権限" )
+	@b4.select( formclientssearch("clientStatus"), options = Seq("-1" -> "") ++ utilities.ViewHelper.makeOptionSeq(utilities.status.ClientStatus.statusSeq, "view.client.status", messages), '_label -> "クライアントステータス" )
+	@b4.select( formclientssearch("contractStatus"), options = Seq("-1" -> "") ++ utilities.ViewHelper.makeOptionSeq(utilities.status.ContractStatus.statusSeq, "view.contract.status", messages), '_label -> "契約ステータス" )
+	@b4.text( formclientssearch("appClientId"),'_label -> "アプリ側ID" )
+	@b4.text( formclientssearch("searchWord"),'_label -> "クライアント名など", 'class -> "autocomplete", Symbol("data-uri") -> admin.routes.ClientController.nameautocomplete(applicationId, "") )
+
+  

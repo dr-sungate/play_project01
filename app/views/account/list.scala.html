@@ -1,0 +1,62 @@
+@(message: String, accounts: List[models.TablesExtend.AccountsRow])(implicit messages: Messages,request: RequestHeader)
+@import helper._
+@implicitFC = @{ b4.horizontal.fieldConstructor("col-md-2", "col-md-10") }
+
+@main("一覧画面") {
+@views.html.globalnavi()	
+}{
+            <div class="row">
+                <div class="col-lg-12">
+                    <h2 class="page-header">アカウント管理</h2>
+                </div>
+             </div>
+           <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            アカウント一覧
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+                            <div class="dataTable_wrapper">
+                               <table class="table table-hover table-condensed">
+                                    <thead>
+                                        <tr>
+                                            <th>ログインID</th>
+                                            <th>名前</th>
+                                            <th>メールアドレス</th>
+                                            <th>権限</th>
+                                            <th></th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                     @for(account <- accounts) {
+                                        <tr class="odd">
+                                          <td>@account.loginId</td>
+                                          <td>@account.name</td>
+                                          <td>@account.email</td>
+                                          <td>@utilities.ViewHelper.getOptionView(account.role,utilities.ViewHelper.makeOptionMap(utilities.auth.Role.statusSeq, "view.account.role", messages))</td>
+                                          <td><a href="@admin.routes.AccountController.edit(account.id)" class="btn btn-outline btn-info btn-xs"><span class="glyphicon glyphicon-edit"></span> 編集</a></td>
+                                          <td>@b4.inline.form(action=admin.routes.AccountController.delete(account.id)) {implicit ifc =>
+                                              @CSRF.formField
+                                              @b4.submit('class -> "btn btn-outline btn-warning btn-xs", 'onclick -> "return confirm(\"削除してよろしいですか？\");" ){<span class="glyphicon glyphicon-remove-sign"></span> 削除}}</td>
+                                        </tr>
+                                        }
+                                   </tbody>
+                                </table>
+                            </div>
+<div class="well">
+<a href="@admin.routes.AccountController.add" class="btn btn-success"><span class="glyphicon glyphicon-save-file"></span> 新規登録</a>
+</div>
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+                    <!-- /.panel -->
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+
+
+ 
+ }

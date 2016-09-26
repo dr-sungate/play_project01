@@ -1,0 +1,73 @@
+@(message: String, applicationId: Long, oauthusers: List[(models.TablesExtend.OauthUsersRow,Option[models.TablesExtend.ClientsRow])], formoauthusersearch: Form[models.TablesExtend.OauthUsersSearchRow], agencyList: Seq[(String, String)], applicationList: Seq[(String, String)], page: utilities.PageNation[_])(implicit messages: Messages,request: RequestHeader)
+@import helper._
+@implicitFC = @{ b4.horizontal.fieldConstructor("col-md-2", "col-md-10") }
+	
+
+@main("一覧画面") {
+@views.html.globalnavi()	
+}{
+            <div class="row">
+                <div class="col-lg-12">
+                    <h2 class="page-header">API管理</h2>
+                </div>
+             </div>
+			<div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            [ @utilities.ViewHelper.getOptionView(applicationId.toString, applicationList.toMap) ] Oauthユーザー一覧
+                        </div>
+				       <div class="panel-body">
+				            <div class="col-md-10 col-md-offset-1">
+				    @b4.inline.form(admin.routes.OauthUserController.index(applicationId, 1)) {implicit ifc =>
+				        @CSRF.formField
+						@views.html.oauthuser.searchform(applicationId, formoauthusersearch,agencyList)
+@b4.submit('class -> "btn btn-primary"){<span class="glyphicon glyphicon-search"></span> 検索}
+						
+				 
+				    }
+				    </div>
+				    </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+                        @views.html.oauthuser.pageNation(applicationId, page, "")
+                            <div class="dataTable_wrapper">
+                                <table class="table table-hover table-condensed">
+                                   <thead>
+                                        <tr>
+                                          <th>OauthユーザーID</th>
+                                          <th>名前</th>
+                                          <th>代理店</th>
+                                          <th>クライアント</th>
+                                          <th></th>
+                                          <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    @for((oauthuser, client) <- oauthusers) {
+                                        <tr class="odd">
+                                          <td>@oauthuser.guid.toString</td>
+                                          <td>@oauthuser.name</td>
+                                          <td>@oauthuser.agencyId.map{ agencyId => <a href="@admin.routes.AgencyController.view(applicationId,agencyId)"><span class="glyphicon glyphicon-send"></span> @utilities.ViewHelper.getOptionView(agencyId.toString,agencyList.toMap)</a> }</td>
+                                          <td>@client.map{ client => <a href="@admin.routes.ClientController.view(applicationId, client.agencyId, client.id)"><span class="glyphicon glyphicon-send"></span> @client.name</a>}</td>
+                                          <td><a href="@admin.routes.OauthUserController.edit(applicationId, oauthuser.guid.toString)" class="btn  btn-outline btn-info btn-xs"><span class="glyphicon glyphicon-edit"></span> 編集</a></td>
+                                          <td>@b4.inline.form(action=admin.routes.OauthUserController.delete(applicationId, oauthuser.guid.toString)) {implicit ifc =>
+                                              @CSRF.formField
+                                              @b4.submit('class -> "btn btn-outline btn-warning btn-xs", 'onclick -> "return confirm(\"削除してよろしいですか？\");" ){<span class="glyphicon glyphicon-remove-sign"></span> 削除}}</td>
+                                        </tr>
+                                        }
+                                   </tbody>
+                                </table>
+                            </div>
+                            @views.html.oauthuser.pageNation(applicationId, page, "")
+<div class="well">
+<a href="@admin.routes.OauthUserController.add(applicationId)" class="btn btn-success"><span class="glyphicon glyphicon-save-file"></span> 新規登録</a>
+</div>
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+                    <!-- /.panel -->
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+ }

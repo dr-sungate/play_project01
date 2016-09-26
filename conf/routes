@@ -1,0 +1,159 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+GET     /                           @controllers.HomeController.index
+
+GET     /admin                           @controllers.admin.DashboardController.index
+
+# Auth
+GET     /auth                          @controllers.auth.LoginLogoutController.index
+POST    /auth/login                     @controllers.auth.LoginLogoutController.login
+GET     /auth/logout                    @controllers.auth.LoginLogoutController.logout
+
+# Account page
+GET     /admin/account                          @controllers.admin.AccountController.index
+GET     /admin/account/regist                           @controllers.admin.AccountController.add
+GET     /admin/account/selfedit                           @controllers.admin.AccountController.selfedit
+GET     /admin/account/edit/:id                           @controllers.admin.AccountController.edit(id : Int)
+POST    /admin/account/create                     @controllers.admin.AccountController.create
+POST    /admin/account/update                     @controllers.admin.AccountController.update
+POST    /admin/account/remove/:id                     @controllers.admin.AccountController.delete(id : Int)
+
+# Application page
+GET     /admin/application                          @controllers.admin.ApplicationController.index(page: Integer = 1)
+GET     /admin/application/regist                           @controllers.admin.ApplicationController.add
+POST    /admin/application/create                     @controllers.admin.ApplicationController.create
+GET     /admin/application/:id/edit                          @controllers.admin.ApplicationController.edit(id : Long)
+POST    /admin/application/update                           @controllers.admin.ApplicationController.update
+POST    /admin/application/:id/remove                     @controllers.admin.ApplicationController.delete(id : Long)
+GET     /admin/application/getvalidcount                          @controllers.admin.ApplicationController.getValidCount
+GET     /admin/application/getapplist                          @controllers.admin.ApplicationController.getAppList
+GET     /admin/application/getapplistwithselected                          @controllers.admin.ApplicationController.getAppListWithSelected
+GET     /admin/application/getapplistwithagency                          @controllers.admin.ApplicationController.getAppListWithAgency
+GET     /admin/application/getapplistwithagencywithselected                          @controllers.admin.ApplicationController.getAppListWithAgencyWithSelected
+# ※ページ設定はグループ最後に記述しないとおかしな動きになる
+GET     /admin/application/page/:page                          @controllers.admin.ApplicationController.index(page: Integer)
+GET     /admin/application/pagenation/:page                    @controllers.admin.ApplicationController.pagenation(page: Int, pagename: String)
+
+PUT     /admin/setappselect                    @controllers.admin.ApplicationController.setApp
+GET     /admin/getappselectname                    @controllers.admin.ApplicationController.getSelectedAppName
+
+
+# Agency page
+GET     /admin/app/:applicationId/agency                           @controllers.admin.AgencyController.index(applicationId: Long, page: Integer ?= 1)
+GET     /admin/app/:applicationId/agency/regist                           @controllers.admin.AgencyController.add(applicationId: Long)
+POST    /admin/app/:applicationId/agency/create                    @controllers.admin.AgencyController.create(applicationId: Long)
+POST    /admin/app/:applicationId/agency/update                           @controllers.admin.AgencyController.update(applicationId: Long)
+GET     /admin/app/:applicationId/agency/nameautocomplete                           @controllers.admin.AgencyController.nameautocomplete(applicationId: Long, name: String)
+GET     /admin/app/:applicationId/agency/:id/edit                           @controllers.admin.AgencyController.edit(applicationId: Long, id : Long)
+POST    /admin/app/:applicationId/agency/:id/remove                    @controllers.admin.AgencyController.delete(applicationId: Long, id : Long)
+GET     /admin/app/:applicationId/agency/:id                           @controllers.admin.AgencyController.view(applicationId: Long, id : Long)
+GET     /admin/agency/getvalidcount                          @controllers.admin.AgencyController.getValidCount
+# ※ページ設定はグループ最後に記述しないとおかしな動きになる
+GET     /admin/app/:applicationId/agency/page/:page                          @controllers.admin.AgencyController.index(applicationId: Long, page: Integer)
+GET     /admin/app/:applicationId/agency/pagenation/:page                    @controllers.admin.AgencyController.pagenation(applicationId: Long, page: Int, pagename: String)
+
+# BillingDestination page
+GET     /admin/app/:applicationId/agency/:agencyId/billingdestination/regist                           @controllers.admin.BillingDestinationController.add(applicationId: Long, agencyId: Long)
+POST    /admin/app/:applicationId/agency/:agencyId/billingdestination/create                    @controllers.admin.BillingDestinationController.create(applicationId: Long, agencyId: Long)
+POST    /admin/app/:applicationId/agency/:agencyId/billingdestination/update                           @controllers.admin.BillingDestinationController.update(applicationId: Long, agencyId: Long)
+GET     /admin/app/:applicationId/agency/:agencyId/billingdestination/:id/edit                           @controllers.admin.BillingDestinationController.edit(applicationId: Long, agencyId: Long, id : Long)
+POST    /admin/app/:applicationId/agency/:agencyId/billingdestination/:id/remove                    @controllers.admin.BillingDestinationController.delete(applicationId: Long, agencyId: Long, id : Long)
+
+# DefaultProduct page
+GET     /admin/app/:applicationId/agency/:agencyId/defaultproduct/regist                           @controllers.admin.DefaultProductController.add(applicationId: Long, agencyId: Long)
+POST    /admin/app/:applicationId/agency/:agencyId/defaultproduct/create                    @controllers.admin.DefaultProductController.create(applicationId: Long, agencyId: Long)
+POST    /admin/app/:applicationId/agency/:agencyId/defaultproduct/update                           @controllers.admin.DefaultProductController.update(applicationId: Long, agencyId: Long)
+GET     /admin/app/:applicationId/agency/:agencyId/defaultproduct/:id/edit                           @controllers.admin.DefaultProductController.edit(applicationId: Long, agencyId: Long, id : Long)
+POST    /admin/app/:applicationId/agency/:agencyId/defaultproduct/:id/remove                    @controllers.admin.DefaultProductController.delete(applicationId: Long, agencyId: Long, id : Long)
+
+# Client page
+GET     /admin/app/:applicationId/client                           @controllers.admin.ClientController.index(applicationId: Long, page: Integer ?= 1)
+GET     /admin/app/:applicationId/client/regist                           @controllers.admin.ClientController.add(applicationId: Long)
+POST    /admin/app/:applicationId/client/create                    @controllers.admin.ClientController.create(applicationId: Long)
+GET     /admin/app/:applicationId/client/nameautocomplete                           @controllers.admin.ClientController.nameautocomplete(applicationId: Long, name: String)
+GET     /admin/app/:applicationId/agency/:agencyId/client/:id/edit                           @controllers.admin.ClientController.edit(applicationId: Long, agencyId: Long, id : Long)
+POST    /admin/app/:applicationId/agency/:agencyId/client/update                           @controllers.admin.ClientController.update(applicationId: Long, agencyId: Long)
+POST    /admin/app/:applicationId/client/:id/remove                    @controllers.admin.ClientController.delete(applicationId: Long, id : Long)
+GET     /admin/app/:applicationId/agency/:agencyId/client/:id                           @controllers.admin.ClientController.view(applicationId: Long, agencyId: Long, id : Long)
+GET     /admin/client/getvalidcount                          @controllers.admin.ClientController.getValidCount
+GET     /admin/client/getclientlistbyagenywithselected                          @controllers.admin.ClientController.getClientListByAgenyWithSelected(agencyId: Long ?= 0)
+# ※ページ設定はグループ最後に記述しないとおかしな動きになる
+GET     /admin/app/:applicationId/client/page/:page                          @controllers.admin.ClientController.index(applicationId: Long, page: Integer)
+GET     /admin/app/:applicationId/client/pagenation/:page                    @controllers.admin.ClientController.pagenation(applicationId: Long, page: Int, pagename: String)
+
+# contract page
+GET     /admin/app/:applicationId/agency/:agencyId/client/:clientId/contract/edit                           @controllers.admin.ContractController.edit(applicationId: Long, agencyId: Long, clientId: Long)
+POST    /admin/app/:applicationId/agency/:agencyId/client/:clientId/contract/update                           @controllers.admin.ContractController.update(applicationId: Long, agencyId: Long, clientId: Long)
+
+# contractaddress page
+GET     /admin/app/:applicationId/agency/:agencyId/client/:clientId/contractaddress/edit                           @controllers.admin.ContractAddressController.edit(applicationId: Long, agencyId: Long, clientId: Long)
+POST    /admin/app/:applicationId/agency/:agencyId/client/:clientId/contractaddress/update                           @controllers.admin.ContractAddressController.update(applicationId: Long, agencyId: Long, clientId: Long)
+
+# billingdestination page
+GET     /admin/app/:applicationId/agency/:agencyId/client/:clientId/billingdestination/change                           @controllers.admin.BillingDestinationController.change(applicationId: Long, agencyId: Long, clientId: Long)
+POST    /admin/app/:applicationId/agency/:agencyId/client/:clientId/billingdestination/changeupdate                           @controllers.admin.BillingDestinationController.changeupdate(applicationId: Long, agencyId: Long, clientId: Long)
+
+# contractdetail page
+GET     /admin/app/:applicationId/agency/:agencyId/client/:clientId/contractdetail/regist                           @controllers.admin.ContractDetailController.add(applicationId: Long, agencyId: Long, clientId: Long)
+POST    /admin/app/:applicationId/agency/:agencyId/client/:clientId/contractdetail/create                    @controllers.admin.ContractDetailController.create(applicationId: Long, agencyId: Long, clientId: Long)
+POST    /admin/app/:applicationId/agency/:agencyId/client/:clientId/contractdetail/update                           @controllers.admin.ContractDetailController.update(applicationId: Long, agencyId: Long, clientId: Long)
+GET     /admin/app/:applicationId/agency/:agencyId/client/:clientId/contractdetail/:id/edit                           @controllers.admin.ContractDetailController.edit(applicationId: Long, agencyId: Long, clientId: Long, id : Long)
+POST    /admin/app/:applicationId/agency/:agencyId/client/:clientId/contractdetail/:id/remove                    @controllers.admin.ContractDetailController.delete(applicationId: Long, agencyId: Long, clientId: Long, id : Long)
+GET     /admin/contractdetail/:agencyId/getdefaultproductwithselected                          @controllers.admin.ContractDetailController.getDefaultProductWithSelected(agencyId: Long, defaultProductId: Long ?= 0)
+
+# LoginHistory page
+GET     /admin/loginhistory                          @controllers.admin.LoginHistoryController.show(page: Integer = 1)
+# ※ページ設定はグループ最後に記述しないとおかしな動きになる
+GET     /admin/loginhistory/:page                          @controllers.admin.LoginHistoryController.show(page: Integer)
+GET     /admin/loginhistory/pagenation/:page                    @controllers.admin.LoginHistoryController.pagenation(page: Int, pagename: String)
+
+
+# OauthUser
+GET     /admin/app/:applicationId/oauthuser                          @controllers.admin.OauthUserController.index(applicationId: Long, page: Integer ?= 1)
+GET     /admin/app/:applicationId/oauthuser/regist                           @controllers.admin.OauthUserController.add(applicationId: Long)
+GET     /admin/app/:applicationId/oauthuser/edit/:id                           @controllers.admin.OauthUserController.edit(applicationId: Long, id : String)
+POST    /admin/app/:applicationId/oauthuser/create                     @controllers.admin.OauthUserController.create(applicationId: Long)
+POST    /admin/app/:applicationId/oauthuser/update                     @controllers.admin.OauthUserController.update(applicationId: Long)
+POST    /admin/app/:applicationId/oauthuser/remove/:id                     @controllers.admin.OauthUserController.delete(applicationId: Long, id : String)
+GET     /admin/app/:applicationId/oauthuser/nameautocomplete                           @controllers.admin.OauthUserController.nameautocomplete(applicationId: Long, name: String)
+GET     /admin/app/:applicationId/oauthuser/page/:page                          @controllers.admin.OauthUserController.index(applicationId: Long, page: Integer)
+GET     /admin/app/:applicationId/oauthuser/pagenation/:page                    @controllers.admin.OauthUserController.pagenation(applicationId: Long, page: Int, pagename: String)
+
+# OauthClient
+GET     /admin/app/:applicationId/oauthclient                          @controllers.admin.OauthClientController.index(applicationId: Long, page: Integer = 1)
+GET     /admin/app/:applicationId/oauthclient/regist                           @controllers.admin.OauthClientController.add(applicationId: Long)
+GET     /admin/app/:applicationId/oauthclient/edit/:id                           @controllers.admin.OauthClientController.edit(applicationId: Long, id : String)
+POST    /admin/app/:applicationId/oauthclient/create                     @controllers.admin.OauthClientController.create(applicationId: Long)
+POST    /admin/app/:applicationId/oauthclient/update                     @controllers.admin.OauthClientController.update(applicationId: Long)
+POST    /admin/app/:applicationId/oauthclient/remove/:id                     @controllers.admin.OauthClientController.delete(applicationId: Long, id : String)
+# ※ページ設定はグループ最後に記述しないとおかしな動きになる
+GET     /admin/app/:applicationId/oauthclient/:page                          @controllers.admin.OauthClientController.index(applicationId: Long, page: Integer)
+GET     /admin/app/:applicationId/oauthclient/pagenation/:page                    @controllers.admin.OauthClientController.pagenation(applicationId: Long, page: Int, pagename: String)
+
+
+# TaxRate page
+GET     /admin/taxrate                          @controllers.admin.TaxRateController.index
+POST    /admin/taxrate/create                     @controllers.admin.TaxRateController.create
+POST    /admin/taxrate/remove/:id                     @controllers.admin.TaxRateController.delete(id : Int)
+
+
+# OauthAPI
+POST    /oauth/access_token                  @controllers.oauth.OAuthController.accessToken
+POST    /oauth/auth_code                  @controllers.oauth.OAuthController.authcode
+GET     /oauth/resources                  @controllers.oauth.OAuthController.resources
+
+# OauthAPI
+POST    /oauth/access_token                  @controllers.oauth.OAuthController.accessToken
+POST    /oauth/auth_code                  @controllers.oauth.OAuthController.authcode
+GET     /oauth/resources                  @controllers.oauth.OAuthController.resources
+
+# API
+GET     /connector/clients/view/:clientId                  @controllers.api.ClientpiController.view(clientId : Long)
+GET     /connector/clients/lists                  @controllers.api.ClientpiController.lists
+POST    /connector/clients/regist                  @controllers.api.ClientpiController.create
+PATCH   /connector/clients/update                  @controllers.api.ClientpiController.update
+
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)

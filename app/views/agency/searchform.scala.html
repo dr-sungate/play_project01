@@ -1,0 +1,27 @@
+@(applicationId: Long, formagencysearch: Form[models.TablesExtend.AgenciesSearchRow], applicationList: Seq[(String, String)])(implicit messages: Messages)
+
+@import helper._
+@import play.api.i18n.Messages
+@import utilities._
+@implicitFC = @{ b4.vertical.fieldConstructor }
+@{val customeurl = "data-uri"}
+
+
+
+@if(formagencysearch.hasErrors) {
+@*
+<div class="form-group">
+    <div class="alert alert-danger col-lg-6 text-center">
+       @for(error <- formagencysearch.errors){
+         @error<br />
+       }
+   </div>
+</div>
+*@
+}
+
+	@b4.text( formagencysearch("agencyName"),'_label -> "顧客名", 'class -> "autocomplete", Symbol("data-uri") -> admin.routes.AgencyController.nameautocomplete(applicationId, "") )
+	@b4.select( formagencysearch("type"), options = Seq("-1" -> "") ++ utilities.ViewHelper.makeOptionSeq(utilities.`type`.AgencyType.typeSeq, "view.agency.agencytype", messages), '_label -> "種別" )
+	@b4.select( formagencysearch("status"), options = Seq("-1" -> "") ++ utilities.ViewHelper.makeOptionSeq(utilities.status.AgencyStatus.statusSeq, "view.agency.status", messages), '_label -> "ステータス" )
+
+  

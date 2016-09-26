@@ -1,0 +1,29 @@
+@(formcontract: Form[models.TablesExtend.ContractsRow])(implicit messages: Messages)
+
+@import helper._
+@import play.api.i18n.Messages
+@import utilities._
+@implicitFC = @{ b4.horizontal.fieldConstructor("col-md-4", "col-md-8") }
+
+@if(formcontract.hasErrors) {
+
+<div class="form-group">
+    <div class="alert alert-danger col-lg-6 text-center">
+       @for(error <- formcontract.errors){
+         @error<br />
+       }
+   </div>
+</div>
+
+}
+
+
+ 
+	@b4.date( formcontract("registedDate"),'_label -> "契約日")
+	@b4.date( formcontract("activatedDate"),'_label -> "有料契約開始日")
+	@b4.date( formcontract("closeDate"),'_label -> "解約日")
+	@b4.select( formcontract("invoiceIssueType"), options = utilities.ViewHelper.makeOptionSeq(utilities.`type`.InvoiceIssueType.typeSeq, "view.billingdestination.invoiceissuetype", messages), '_label -> "請求タイプ" )
+	@b4.select( formcontract("status"), options = utilities.ViewHelper.makeOptionSeq(utilities.status.ContractStatus.statusSeq, "view.contract.status", messages), '_label -> "契約ステータス" )
+  	@b4.textarea( formcontract("memo"), '_label -> "契約メモ", 'placeholder -> "" )
+ 
+ 

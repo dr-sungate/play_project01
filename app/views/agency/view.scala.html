@@ -1,0 +1,144 @@
+@(message: String, applicationId: Long, agency: models.TablesExtend.AgenciesRow, billingdestinations: List[models.TablesExtend.BillingDestinationsRow], defaultproducts: List[models.TablesExtend.DefaultProductsRow], applicationList: Seq[(String, String)], timezoneList: Seq[(String, String)], currentuser: models.TablesExtend.AccountsRow)(implicit messages: Messages,request: RequestHeader)
+@import helper._
+@implicitFC = @{ b4.horizontal.fieldConstructor("col-md-2", "col-md-12") }
+
+@main("詳細画面") {
+@views.html.globalnavi()	
+}{
+           <div class="row">
+                <div class="col-lg-12">
+                    <h2 class="page-header">代理店管理</h2>
+                </div>
+             </div>
+           <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            詳細画面
+                        </div>
+	                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+                            <!-- Nav tabs -->
+                            <ul class="nav nav-tabs">
+                                <li class="active"><a href="#agency" data-toggle="tab">代理店情報</a>
+                                </li>
+                                <li><a href="#billingdestinations" data-toggle="tab">請求先</a>
+                                </li>
+                                <li><a href="#defaultproducts" data-toggle="tab">商品</a>
+                                </li>
+ 
+                            </ul>
+
+                            <!-- Tab panes -->
+                            <div class="tab-content">
+                                <div class="tab-pane fade in active" id="agency">
+		                            <h3>代理店情報  <a href="@admin.routes.AgencyController.edit(applicationId, agency.id)" class="btn btn-info"><span class="glyphicon glyphicon-edit"></span> 編集</a></h3>
+		                            <div class="table-responsive clearfix">
+                               		<table class="table table-responsive table-bordered">
+	                                  <tbody>
+	                                        <tr>
+	                                            <th class="active col-xs-2 col-ms-2 col-md-2 col-lg-2">代理店名</th>
+	                                            <td>@agency.agencyName</td>
+	                                        </tr>
+	                                        <tr>
+	                                            <th class="active">種別</th>
+	                                            <td>@utilities.ViewHelper.getOptionView(agency.`type`.get,utilities.ViewHelper.makeOptionMap(utilities.`type`.AgencyType.typeSeq, "view.agency.agencytype", messages))</td>
+	                                        </tr>
+	                                        <tr>
+	                                            <th class="active">ステータス</th>
+	                                            <td>@utilities.ViewHelper.getOptionView(agency.status,utilities.ViewHelper.makeOptionMap(utilities.status.AgencyStatus.statusSeq, "view.agency.status", messages))</td>
+	                                        </tr>
+	                                        <tr>
+	                                            <th class="active">タイムゾーン</th>
+	                                            <td>@utilities.ViewHelper.getOptionView(agency.timezoneId.get.toString(),timezoneList.toMap)</td>
+	                                        </tr>
+	                                        <tr>
+	                                            <th class="active">メモ</th>
+	                                            <td>@Html(utilities.ViewHelper.nl2br(agency.memo))</td>
+	                                        </tr>
+	                                        <tr>
+	                                            <th class="active">作成日時</th>
+	                                            <td>@utilities.ViewHelper.dateFormat(agency.createdDate, "%tY/%<tm/%<td %<tH:%<tM:%<tS")</td>
+	                                        </tr>
+                              			</tbody>
+                               		</table>
+                               		</div>
+ 		                            
+                                </div>
+                                 <div class="tab-pane fade" id="billingdestinations">
+ 		                            <h3>請求先情報  <a href="@admin.routes.BillingDestinationController.add(applicationId, agency.id)" class="btn btn-success"><span class="glyphicon glyphicon-save-file"></span> 新規追加</a></h3>
+		                            <div class="table-responsive clearfix">
+                                         <table class="table table-hover table-condensed">
+	                                       <thead>
+	                                        <tr>
+	                                            <th>請求先名</th>
+	                                            <th>請求タイプ</th>
+	                                            <th>締め日</th>
+	                                            <th>支払期日</th>
+	                                            <th></th>
+	                                            <th></th>
+	                                        </tr>
+	                                    </thead>
+	                                    <tbody>
+	                                    @for(billingdestination <- billingdestinations) {
+	                                    <tr class="odd">
+                                          <td>@billingdestination.billingDestinationName</td>
+                                          <td>@utilities.ViewHelper.getOptionView(billingdestination.invoiceIssueType.getOrElse(""),utilities.ViewHelper.makeOptionMap(utilities.`type`.InvoiceIssueType.typeSeq, "view.billingdestination.invoiceissuetype", messages))</td>
+                                          <td>@utilities.ViewHelper.getOptionView(billingdestination.closingDate.getOrElse("").toString,utilities.ViewHelper.makeOptionMap(utilities.`type`.ClosingDateType.typeSeq, "view.billingdestination.closingdatetype", messages))</td>
+                                          <td>@utilities.ViewHelper.getOptionView(billingdestination.dueDateMonth.getOrElse(""), utilities.ViewHelper.makeOptionMap(utilities.`type`.DueDateMonthType.typeSeq, "view.billingdestination.duedatemonthtype", messages)) @utilities.ViewHelper.getOptionView(billingdestination.dueDateDay.getOrElse("").toString, utilities.ViewHelper.makeOptionMap(utilities.`type`.DueDateDayType.typeSeq, "view.billingdestination.duedatedaytype", messages))</td>
+                                          <td><a href="@admin.routes.BillingDestinationController.edit(applicationId, agency.id, billingdestination.id)" class="btn btn-outline btn-success btn-xs"><span class="glyphicon glyphicon-edit"></span> 編集</a></td>
+                                          <td>@b4.inline.form(action=admin.routes.BillingDestinationController.delete(applicationId, agency.id, billingdestination.id)) {implicit ifc =>
+                                              @CSRF.formField
+                                              @b4.submit('class -> "btn btn-outline btn-warning btn-xs", 'onclick -> "return confirm(\"削除してよろしいですか？\");" ){<span class="glyphicon glyphicon-remove-sign"></span> 削除}}</td>
+                                        </tr>
+                                        }
+                                   </tbody>
+                                </table>
+                                </div>
+                                </div>
+ 
+                                <div class="tab-pane fade" id="defaultproducts">
+		                            <h3>商品情報  <a href="@admin.routes.DefaultProductController.add(applicationId, agency.id)" class="btn btn-success"><span class="glyphicon glyphicon-save-file"></span> 新規追加</a></h3>
+		                            <div class="table-responsive clearfix">
+                                         <table class="table table-hover table-condensed">
+	                                       <thead>
+	                                        <tr>
+	                                            <th>商品名</th>
+	                                            <th>商品タイプ</th>
+	                                            <th>価格</th>
+	                                            <th>メモ</th>
+	                                            <th></th>
+	                                            <th></th>
+	                                        </tr>
+	                                    </thead>
+	                                    <tbody>
+	                                    @for(defaultproduct <- defaultproducts) {
+	                                    <tr class="odd">
+                                          <td>@defaultproduct.productName</td>
+                                          <td>@utilities.ViewHelper.getOptionView(defaultproduct.productType.getOrElse(""),utilities.ViewHelper.makeOptionMap(utilities.`type`.ProductType.typeSeq, "view.defaultproduct.producttype", messages))</td>
+                                          <td>@utilities.ViewHelper.currencyFormat(defaultproduct.price)</td>
+                                          <td>@Html(utilities.ViewHelper.nl2br(defaultproduct.memo))</td>
+                                          <td><a href="@admin.routes.DefaultProductController.edit(applicationId, agency.id, defaultproduct.id)" class="btn btn-outline btn-success btn-xs"><span class="glyphicon glyphicon-edit"></span> 編集</a></td>
+                                          <td>@b4.inline.form(action=admin.routes.DefaultProductController.delete(applicationId, agency.id, defaultproduct.id)) {implicit ifc =>
+                                              @CSRF.formField
+                                              @b4.submit('class -> "btn btn-outline btn-warning btn-xs", 'onclick -> "return confirm(\"削除してよろしいですか？\");" ){<span class="glyphicon glyphicon-remove-sign"></span> 削除}}</td>
+                                        </tr>
+                                        }
+                                   </tbody>
+                                </table>
+                                </div>
+                                </div>
+                           </div>
+                        </div>
+  <div class="well">
+<a href="@admin.routes.AgencyController.index(applicationId, 1)" class="btn btn-default btn-lg"><span class="glyphicon glyphicon-list"></span>一覧</a>
+</div>
+                        <!-- /.panel-body -->
+                    </div>
+                    <!-- /.panel -->
+                </div>
+ 
+
+
+ 
+ }

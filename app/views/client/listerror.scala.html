@@ -1,0 +1,64 @@
+@(message: String, applicationId: Long, formclientssearch: Form[models.TablesExtend.ClientsSearchRow], agencyList: Seq[(String, String)], applicationList: Seq[(String, String)])(implicit messages: Messages,request: RequestHeader)
+@import helper._
+@implicitFC = @{ b4.vertical.fieldConstructor }
+	
+@main("一覧画面") {
+@views.html.globalnavi()	
+}{
+             <div class="row">
+                <div class="col-lg-12">
+                    <h2 class="page-header">クライアント管理</h2>
+                </div>
+             </div>
+			<div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            [ @utilities.ViewHelper.getOptionView(applicationId.toString, applicationList.toMap) ] クライアント一覧
+                        </div>
+				       <div class="panel-body">
+				            <div class="col-md-10 col-md-offset-1">
+				    @b4.inline.form(action=admin.routes.ClientController.index(applicationId, 1)) {implicit ifc =>
+				        @CSRF.formField
+						@views.html.client.searchform(applicationId, formclientssearch,agencyList)
+@b4.submit('class -> "btn btn-primary"){<span class="glyphicon glyphicon-search"></span> 検索}
+						
+				 
+				    }
+				    </div>
+    				</div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+                            <div class="dataTable_wrapper">
+                                <table class="table table-hover table-condensed">
+                                   <thead>
+                                        <tr>
+                                           <th>アプリ側クライアントID</th>
+                                            <th>クライアント名</th>
+                                            <th>メール</th>
+                                            <th>会社名</th>
+                                            <th>種別</th>
+                                            <th>クライアントステータス</th>
+                                            <th>契約ステータス</th>
+                                            <th></th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                   </tbody>
+                                </table>
+                            </div>
+<div class="well">
+<a href="@admin.routes.ClientController.add(applicationId)" class="btn btn-success"><span class="glyphicon glyphicon-save-file"></span> 新規登録</a>
+</div>
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+                    <!-- /.panel -->
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+
+
+
+}

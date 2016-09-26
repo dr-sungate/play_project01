@@ -1,0 +1,38 @@
+@(formcontractdetail: Form[models.TablesExtend.ContractDetailsContractDetailPricesRow], defaultProductList: Seq[(String,String)], agencyId: Long)(implicit messages: Messages,request: RequestHeader)
+
+@import helper._
+@import play.api.i18n.Messages
+@import utilities._
+@implicitFC = @{ b4.horizontal.fieldConstructor("col-md-4", "col-md-8") }
+
+	<script src="@routes.Assets.versioned("javascripts/contractdetailform.js")" type="text/javascript"></script>
+
+@if(formcontractdetail.hasErrors) {
+
+<div class="form-group">
+    <div class="alert alert-danger col-lg-6 text-center">
+       @for(error <- formcontractdetail.errors){
+         @error<br />
+       }
+   </div>
+</div>
+
+}
+
+	@b4.select( formcontractdetail("defaultProductId"), options = Seq("-1" -> "") ++ defaultProductList, '_label -> "デフォルト商品" , Symbol("data-uri") -> CSRF(admin.routes.ContractDetailController.getDefaultProductWithSelected(agencyId)))
+	@b4.text( formcontractdetail("appProductId"), '_label -> "アプリ側商品ID", 'placeholder -> "ID00001")
+	@b4.text( formcontractdetail("productName"), '_label -> "商品名", 'placeholder -> "〇〇●商品", '_showIconWarning -> true)
+	@b4.select( formcontractdetail("productType"), options = utilities.ViewHelper.makeOptionSeq(utilities.`type`.ProductType.typeSeq, "view.defaultproduct.producttype", messages), '_label -> "商品タイプ" )
+	@b4.text( formcontractdetail("accountName"), '_label -> "アカウント名", 'placeholder -> "〇〇●")
+ 	@b4.textarea( formcontractdetail("details"), '_label -> "商品詳細", 'placeholder -> "" )
+	@b4.date( formcontractdetail("registedDate"),'_label -> "登録日")
+	@b4.date( formcontractdetail("closeDate"),'_label -> "解約日")
+	@b4.date( formcontractdetail("closeScheduledDate"),'_label -> "解約予定日")
+ 	@b4.textarea( formcontractdetail("closeReason"), '_label -> "解約理由", 'placeholder -> "" )
+	@b4.select( formcontractdetail("status"), options = utilities.ViewHelper.makeOptionSeq(utilities.status.ContractDetailStatus.statusSeq, "view.contractdetail.status", messages), '_label -> "契約ステータス" )
+ 	@b4.textarea( formcontractdetail("memo"), '_label -> "メモ", 'placeholder -> "" )
+ 	@b4.text( formcontractdetail("contractDetailPrice.unitPrice"), '_label -> "単価", 'placeholder -> "" , '_showIconWarning -> true)
+ 	@b4.text( formcontractdetail("contractDetailPrice.quantity"), '_label -> "数量", 'placeholder -> "" , '_showIconWarning -> true)
+ 	@b4.text( formcontractdetail("contractDetailPrice.discount"), '_label -> "値引き額", 'placeholder -> "" , '_showIconWarning -> true)
+ 	@b4.text( formcontractdetail("contractDetailPrice.discountRate"), '_label -> "値引き率", 'placeholder -> "" , '_showIconWarning -> true)
+ 

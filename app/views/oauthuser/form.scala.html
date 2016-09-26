@@ -1,0 +1,11 @@
+@(formaoauthuser: Form[models.TablesExtend.OauthUsersRow], agencyList: Seq[(String, String)])(implicit messages: Messages,request: RequestHeader)
+
+@import helper._
+@import play.api.i18n.Messages
+@implicitFC = @{ b4.horizontal.fieldConstructor("col-md-2", "col-md-10") }
+		<script src="@routes.Assets.versioned("javascripts/oauthuserform.js")" type="text/javascript"></script>
+
+	@b4.select( formaoauthuser("agencyId"), options = Seq("" -> "") ++ agencyList, '_label -> "代理店" )
+	@b4.select( formaoauthuser("clientId"), options = Seq("" -> ""), '_label -> "クライアント", Symbol("data-uri") -> CSRF(admin.routes.ClientController.getClientListByAgenyWithSelected()) , Symbol("data-initvalue") -> formaoauthuser("clientId").value.getOrElse(""))
+	@b4.text( formaoauthuser("name"), '_label -> "名前", 'placeholder -> "山田太郎" )
+ 

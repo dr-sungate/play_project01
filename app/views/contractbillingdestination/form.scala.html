@@ -1,0 +1,49 @@
+@(formcontractbillingdestination: Form[models.TablesExtend.ContractBillingDestinationRow], billingdestinationlist: List[(models.TablesExtend.BillingDestinationsRow, models.TablesExtend.BillingAddressesRow)])(implicit messages: Messages)
+
+@import helper._
+@import play.api.i18n.Messages
+@import utilities._
+@implicitFC = @{ b4.horizontal.fieldConstructor("col-md-4", "col-md-8") }
+
+@if(formcontractbillingdestination.hasErrors) {
+
+<div class="form-group">
+    <div class="alert alert-danger col-lg-6 text-center">
+       @for(error <- formcontractbillingdestination.errors){
+         @error<br />
+       }
+   </div>
+</div>
+
+}
+
+
+<table class="table table-hover table-condensed">
+    <thead>
+       <tr>
+         <th></th>
+         <th>請求先名</th>
+         <th>請求タイプ</th>
+         <th>締め日</th>
+         <th>支払期日</th>
+         <th>会社名</th>
+         <th>担当者名</th>
+       </tr>
+     </thead>
+     <tbody>
+     @for((billingdestination, billingaddress) <- billingdestinationlist) {
+     <tr class="odd">
+          <td class="text-left">@b4.radio( formcontractbillingdestination("billingDestinationId"), options = Seq(billingdestination.id.toString -> ""))</td>
+          <td>@billingdestination.billingDestinationName</td>
+          <td>@utilities.ViewHelper.getOptionView(billingdestination.invoiceIssueType.getOrElse(""),utilities.ViewHelper.makeOptionMap(utilities.`type`.InvoiceIssueType.typeSeq, "view.billingdestination.invoiceissuetype", messages))</td>
+          <td>@utilities.ViewHelper.getOptionView(billingdestination.closingDate.getOrElse("").toString,utilities.ViewHelper.makeOptionMap(utilities.`type`.ClosingDateType.typeSeq, "view.billingdestination.closingdatetype", messages))</td>
+          <td>@utilities.ViewHelper.getOptionView(billingdestination.dueDateMonth.getOrElse(""), utilities.ViewHelper.makeOptionMap(utilities.`type`.DueDateMonthType.typeSeq, "view.billingdestination.duedatemonthtype", messages)) @utilities.ViewHelper.getOptionView(billingdestination.dueDateDay.getOrElse("").toString, utilities.ViewHelper.makeOptionMap(utilities.`type`.DueDateDayType.typeSeq, "view.billingdestination.duedatedaytype", messages))</td>
+          <td>@billingaddress.company</td>
+          <td>@billingaddress.staff</td>
+         </tr>
+        }
+   </tbody>
+</table>
+
+ 
+ 

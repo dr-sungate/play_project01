@@ -1,0 +1,14 @@
+@(formclient: Form[models.TablesExtend.ClientsRow])(implicit messages: Messages)
+
+@import helper._
+@import play.api.i18n.Messages
+@import utilities._
+@implicitFC = @{ b4.horizontal.fieldConstructor("col-md-4", "col-md-8") }
+
+	@b4.text( formclient("appClientId"), '_label -> "アプリ側ID", 'placeholder -> "" , '_showIconWarning -> true)
+	@b4.text( formclient("name"), '_label -> "名前", 'placeholder -> "山田太郎" , '_showIconWarning -> true)
+	@b4.email( formclient("email"), '_label -> "メール", 'placeholder -> "eee@eee.kk" )
+	@b4.select( formclient("role"), options = utilities.ViewHelper.makeOptionSeq(utilities.`type`.ClientRoleType.typeSeq, "view.client.clientroletype", messages), '_label -> "権限" )
+	@b4.select( formclient("status"), options = utilities.ViewHelper.makeOptionSeq(utilities.status.ClientStatus.statusSeq, "view.client.status", messages), '_label -> "ステータス" )
+ 	@b4.textarea( formclient("memo"), '_label -> "メモ", 'placeholder -> "" )
+ 
