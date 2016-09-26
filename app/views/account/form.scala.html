@@ -1,0 +1,12 @@
+@(formaccount: Form[models.TablesExtend.AccountsRow])(implicit messages: Messages)
+
+@import helper._
+@import play.api.i18n.Messages
+@implicitFC = @{ b4.horizontal.fieldConstructor("col-md-4", "col-md-8") }
+
+	@b4.text( formaccount("loginId"), '_label -> "ログインID", 'placeholder -> "" , '_showIconWarning -> true)
+	@b4.text( formaccount("name"), '_label -> "名前", 'placeholder -> "山田太郎" , '_showIconWarning -> true)
+	@b4.email( formaccount("email"), '_label -> "メール", 'placeholder -> "eee@eee.kk" )
+	@b4.password( formaccount("password"), '_label -> "パスワード", 'placeholder -> "" )
+	@b4.select( formaccount("role"), options = utilities.ViewHelper.makeOptionSeq(utilities.auth.Role.statusSeq, "view.account.role", messages), '_label -> "ステータス" )
+ 

@@ -1,0 +1,14 @@
+@(formapplication: Form[models.TablesExtend.AgenciesApplicationAgencyRow], applicationId: Long, applicationList: Seq[(String, String)], timezoneList: Seq[(String, String)])(implicit messages: Messages)
+
+@import helper._
+@import play.api.i18n.Messages
+@import utilities._
+@implicitFC = @{ b4.horizontal.fieldConstructor("col-md-4", "col-md-8") }
+
+	@b4.select( formapplication("applicationAgency.applicationId"), options = ViewHelper.removeListExceptTarget(applicationList, applicationId.toString), '_label -> "APPサービス" )
+	@b4.text( formapplication("agencyName"), '_label -> "代理店名", 'placeholder -> "" , '_showIconWarning -> true)
+	@b4.select( formapplication("type"), options = utilities.ViewHelper.makeOptionSeq(utilities.`type`.AgencyType.typeSeq, "view.agency.agencytype", messages), '_label -> "種別" )
+	@b4.select( formapplication("status"), options = utilities.ViewHelper.makeOptionSeq(utilities.status.AppStatus.statusSeq, "view.application.status", messages), '_label -> "ステータス" )
+	@b4.select( formapplication("timezoneId"), options = timezoneList, '_label -> "タイムゾーン", 'value -> "81" )
+ 	@b4.textarea( formapplication("memo"), '_label -> "メモ", 'placeholder -> "" )
+ 

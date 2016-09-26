@@ -1,0 +1,77 @@
+@(message: String, applicationId: Long, agencies: List[((models.TablesExtend.AgenciesRow,models.TablesExtend.ApplicationAgencyRow),models.TablesExtend.ApplicationsRow)], formagenciessearch: Form[models.TablesExtend.AgenciesSearchRow], applicationList: Seq[(String, String)], timezoneList: Seq[(String, String)], page: utilities.PageNation[_])(implicit messages: Messages,request: RequestHeader)
+@import helper._
+@implicitFC = @{ b4.horizontal.fieldConstructor("col-md-2", "col-md-10") }
+
+@main("一覧画面"){
+@views.html.globalnavi()	
+}{
+            <div class="row">
+                <div class="col-lg-12">
+                    <h2 class="page-header">代理店管理</h2>
+                </div>
+             </div>
+			<div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            [ @utilities.ViewHelper.getOptionView(applicationId.toString, applicationList.toMap) ] 代理店一覧
+                        </div>
+				       <div class="panel-body">
+				            <div class="col-md-10 col-md-offset-1">
+				    @b4.inline.form(action=admin.routes.AgencyController.index(applicationId, 1)) {implicit ifc =>
+				        @CSRF.formField
+						@views.html.agency.searchform(applicationId, formagenciessearch,applicationList)
+@b4.submit('class -> "btn btn-primary"){<span class="glyphicon glyphicon-search"></span> 検索}
+						
+				 
+				    }
+				    </div>
+				    </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+                        @views.html.agency.pageNation(applicationId, page, "")
+                            <div class="dataTable_wrapper">
+                                <table class="table table-hover table-condensed">
+                                   <thead>
+                                        <tr>
+                                            <th>代理店名</th>
+                                            <th>種別</th>
+                                            <th>ステータス</th>
+                                            <th>アプリ名</th>
+                                            <th>タイムゾーン</th>
+                                            <th></th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    @for(((agency, applicationagency),application) <- agencies) {
+                                        <tr class="odd">
+                                          <td>@agency.agencyName</td>
+                                          <td>@utilities.ViewHelper.getOptionView(agency.`type`.get,utilities.ViewHelper.makeOptionMap(utilities.`type`.AgencyType.typeSeq, "view.agency.agencytype", messages))</td>
+                                          <td><span class="@utilities.ViewHelper.getOptionView(agency.status,utilities.ViewHelper.makeOptionMap(utilities.status.AgencyStatus.statusSeq, "view.agency.statuscolor", messages))">@utilities.ViewHelper.getOptionView(agency.status,utilities.ViewHelper.makeOptionMap(utilities.status.AgencyStatus.statusSeq, "view.agency.status", messages))</span></td>
+                                          <td>@application.appName</td>
+                                          <td>@utilities.ViewHelper.getOptionView(agency.timezoneId.get.toString(),timezoneList.toMap)</td>
+                                           <td><a href="@admin.routes.AgencyController.view(applicationId, agency.id)" class="btn btn-outline btn-info btn-xs"><span class="glyphicon glyphicon-info-sign"></span> 詳細</a></td>
+                                          <td>@b4.inline.form(action=admin.routes.AgencyController.delete(applicationId, agency.id)) {implicit ifc =>
+                                              @CSRF.formField
+                                              @b4.submit('class -> "btn btn-outline btn-warning btn-xs", 'onclick -> "return confirm(\"削除してよろしいですか？\");" ){<span class="glyphicon glyphicon-remove-sign"></span> 削除}}</td>
+                                        </tr>
+                                        }
+                                   </tbody>
+                                </table>
+                            </div>
+                            @views.html.agency.pageNation(applicationId, page, "")
+<div class="well">
+<a href="@admin.routes.AgencyController.add(applicationId)" class="btn btn-success"><span class="glyphicon glyphicon-save-file"></span> 新規登録</a>
+</div>
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+                    <!-- /.panel -->
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+
+
+ 
+ }

@@ -1,0 +1,63 @@
+@(message: String, applications: List[models.TablesExtend.ApplicationsRow], page: utilities.PageNation[_])(implicit messages: Messages,request: RequestHeader)
+@import helper._
+@implicitFC = @{ b4.horizontal.fieldConstructor("col-md-2", "col-md-10") }
+
+@main("一覧画面") {
+@views.html.globalnavi()	
+}{
+            <div class="row">
+                <div class="col-lg-12">
+                    <h2 class="page-header">APPサービス管理</h2>
+                </div>
+             </div>
+           <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            APPサービス一覧
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+                            <div class="dataTable_wrapper">
+                                <table class="table table-hover table-condensed">
+                                    <thead>
+                                        <tr>
+                                            <th>APPサービス名</th>
+                                            <th>URL</th>
+                                            <th>IPアドレス</th>
+                                            <th>ステータス</th>
+                                            <th></th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                     @for(application <- applications) {
+                                        <tr class="odd">
+                                          <td>@application.appName</td>
+                                          <td>@application.url</td>
+                                          <td>@Html(utilities.ViewHelper.nl2br(application.serverIps))</td>
+                                          <td><span class="@utilities.ViewHelper.getOptionView(application.status,utilities.ViewHelper.makeOptionMap(utilities.status.AppStatus.statusSeq, "view.application.statuscolor", messages))">@utilities.ViewHelper.getOptionView(application.status,utilities.ViewHelper.makeOptionMap(utilities.status.AppStatus.statusSeq, "view.application.status", messages))</span></td>
+                                          <td><a href="@admin.routes.ApplicationController.edit(application.id)" class="btn  btn-outline btn-info btn-xs"><span class="glyphicon glyphicon-edit"></span> 編集</a></td>
+                                          <td>@b4.inline.form(action=admin.routes.ApplicationController.delete(application.id)) {implicit ifc =>
+                                              @CSRF.formField
+                                              @b4.submit('class -> "btn  btn-outline btn-warning btn-xs", 'onclick -> "return confirm(\"削除してよろしいですか？\");" ){<span class="glyphicon glyphicon-remove-sign"></span> 削除}}</td>
+                                        </tr>
+                                        }
+                                   </tbody>
+                                </table>
+                            </div>
+                            @views.html.application.pageNation(page, "")
+<div class="well">
+<a href="@admin.routes.ApplicationController.add" class="btn btn-success"><span class="glyphicon glyphicon-save-file"></span> 新規登録</a>
+</div>
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+                    <!-- /.panel -->
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+
+
+ 
+ }

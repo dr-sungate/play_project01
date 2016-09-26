@@ -1,0 +1,11 @@
+@(formapplication: Form[models.TablesExtend.ApplicationsRow])(implicit messages: Messages)
+
+@import helper._
+@import play.api.i18n.Messages
+@implicitFC = @{ b4.horizontal.fieldConstructor("col-md-4", "col-md-8") }
+
+	@b4.text( formapplication("appName"), '_label -> "APPサービス名", 'placeholder -> "" , '_showIconWarning -> true)
+	@b4.text( formapplication("url"), '_label -> "url", 'placeholder -> "www.example.com" )
+	@b4.textarea( formapplication("serverIps"), '_label -> "サーバIPアドレス", 'placeholder -> "127.0.0.1" )
+	@b4.select( formapplication("status"), options = utilities.ViewHelper.makeOptionSeq(utilities.status.AppStatus.statusSeq, "view.application.status", messages), '_label -> "ステータス" )
+ 

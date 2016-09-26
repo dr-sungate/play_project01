@@ -1,0 +1,24 @@
+@(formdefaultproduct: Form[models.TablesExtend.DefaultProductsRow])(implicit messages: Messages)
+
+@import helper._
+@import play.api.i18n.Messages
+@import utilities._
+@implicitFC = @{ b4.horizontal.fieldConstructor("col-md-4", "col-md-8") }
+
+@if(formdefaultproduct.hasErrors) {
+	@*
+<div class="form-group">
+    <div class="alert alert-danger col-lg-6 text-center">
+       @for(error <- formbillingdestination.errors){
+         @error<br />
+       }
+   </div>
+</div>
+*@
+}
+
+	@b4.text( formdefaultproduct("productName"), '_label -> "商品名", 'placeholder -> "〇〇●商品", '_showIconWarning -> true)
+	@b4.select( formdefaultproduct("productType"), options = utilities.ViewHelper.makeOptionSeq(utilities.`type`.ProductType.typeSeq, "view.defaultproduct.producttype", messages), '_label -> "商品タイプ" )
+	@b4.text( formdefaultproduct("price"), '_label -> "商品価格", 'placeholder -> "" )
+	@b4.textarea( formdefaultproduct("memo"), '_label -> "メモ", 'placeholder -> "" )
+ 

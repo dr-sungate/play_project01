@@ -1,0 +1,11 @@
+@(pageNationUtil: utilities.PageNation[_], pageName: String)(implicit request: RequestHeader)
+
+
+<div class="dataTables_paginate paging_simple_numbers">
+  <ul class="pagination">
+    <li class="paginate_button previous @if(pageNationUtil.currentPageNum==1){active}"><a href="@utilities.ViewHelper.addRequestQuery(admin.routes.ApplicationController.pagenation(1, pageName), request)">&laquo;</a></li>
+    @for(page <- pageNationUtil.pageNumList){<li class="@if(pageNationUtil.currentPageNum==page){active}"><a href="@utilities.ViewHelper.addRequestQuery(admin.routes.ApplicationController.pagenation(page, pageName), request)">@page</a></li>}
+    <li class="paginate_button next @if(pageNationUtil.currentPageNum==pageNationUtil.totalPageNum){active}"><a href="@utilities.ViewHelper.addRequestQuery(admin.routes.ApplicationController.pagenation(pageNationUtil.totalPageNum, pageName), request)">&raquo;</a></li>
+  </ul>
+<div class="pull-left dataTables_info text-muted"><span class="glyphicon glyphicon-equalizer"></span> @pageNationUtil.currentPageNum / @pageNationUtil.totalPageNum [ Total: @pageNationUtil.totalDataCount]</div>
+</div>

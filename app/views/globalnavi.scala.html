@@ -1,0 +1,106 @@
+@()(implicit request: RequestHeader)
+@import helper._
+
+       <!-- Navigation -->
+        <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="@admin.routes.DashboardController.index">eA 顧客＆請求システム</a>
+            </div>
+            <!-- /.navbar-header -->
+
+            <ul class="nav navbar-top-links navbar-right">
+                 <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <i class="glyphicon glyphicon-book"></i>  <i id="currentappselect"  data-uri="@admin.routes.ApplicationController.getSelectedAppName"></i>  <i class="fa fa-caret-down"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-user" id="appselector"  data-uri="@CSRF(admin.routes.ApplicationController.getAppList)"></ul>
+                    <!-- /.dropdown-user -->
+                </li>
+                <!-- /.dropdown -->
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <i class="fa fa-user fa-fw"></i>  <i class="fa fa-caret-down"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-user">
+                        <li><a href="@admin.routes.AccountController.selfedit"><i class="fa fa-gear fa-fw"></i> 設定変更</a>
+                        </li>
+                        <li><a href="@admin.routes.LoginHistoryController.show(1)"><i class="fa fa-gear fa-fw"></i> ログイン履歴</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li><a href="/auth/logout"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+                        </li>
+                    </ul>
+                    <!-- /.dropdown-user -->
+                </li>
+                <!-- /.dropdown -->
+            </ul>
+            <!-- /.navbar-top-links -->
+			<div id="setappselect"  data-uri="@CSRF(admin.routes.ApplicationController.setApp)"></div>
+			
+            <div class="navbar-default sidebar" role="navigation">
+                <div class="sidebar-nav navbar-collapse">
+                    <ul class="nav" id="side-menu">
+                        <li>
+                            <a href="@admin.routes.DashboardController.index"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
+                        </li>
+                        <li class="active">
+                            <a href="javascript:void(0);"><i class="fa fa-bar-chart-o fa-fw"></i> 顧客管理<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="@admin.routes.ApplicationController.index(1)"><span class="glyphicon glyphicon-arrow-right"></span> APPサービス管理</a>
+                                </li>
+                                <li class="active">
+                                    <a href="javascript:void(0);"><span class="glyphicon glyphicon-arrow-right"></span> 代理店管理<span class="fa arrow"></span></a>
+                                    <ul class="nav nav-third-level" id="globalnavi-agency"  data-uri="@CSRF(admin.routes.ApplicationController.getAppListWithSelected)"></ul>
+                                </li>
+                               <li class="active">
+                                    <a href="javascript:void(0);"><span class="glyphicon glyphicon-arrow-right"></span> クライアント管理<span class="fa arrow"></span></a>
+                                    <ul class="nav nav-third-level" id="globalnavi-client"  data-uri="@CSRF(admin.routes.ApplicationController.getAppListWithAgencyWithSelected)"></ul>
+                                </li>
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
+                        <li>
+                            <a href="javascript:void(0);"><i class="fa fa-bar-chart-o fa-fw"></i> API管理<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="javascript:void(0);"><span class="glyphicon glyphicon-arrow-right"></span> OAuthユーザー管理<span class="fa arrow"></span></a>
+                                    <ul class="nav nav-third-level" id="globalnavi-oauthuser"  data-uri="@CSRF(admin.routes.ApplicationController.getAppListWithSelected)"></ul>
+                                 </li>
+                                <li>
+                                    <a href="javascript:void(0);"><span class="glyphicon glyphicon-arrow-right"></span> OAuthクライアント管理<span class="fa arrow"></span></a>
+                                    <ul class="nav nav-third-level" id="globalnavi-oauthclient"  data-uri="@CSRF(admin.routes.ApplicationController.getAppListWithSelected)"></ul>
+                                </li>
+                             </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
+                        <li>
+                            <a href="@admin.routes.TaxRateController.index"><i class="fa fa-table fa-fw"></i> 税率管理</a>
+                        </li>
+                        <li>
+                            <a href="@admin.routes.AccountController.index"><i class="fa fa-edit fa-fw"></i> アカウント管理</a>
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-wrench fa-fw"></i> 請求管理<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="panels-wells.html">承認待ち</a>
+                                </li>
+                                <li>
+                                    <a href="buttons.html">発行待ち</a>
+                                </li>
+                                <li>
+                                    <a href="notifications.html">入金待ち</a>
+                                </li>
+                                <li>
+                                    <a href="typography.html">入金超過</a>
+                                </li>
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
+                     </ul>
+                </div>
+                <!-- /.sidebar-collapse -->
+            </div>
+            <!-- /.navbar-static-side -->
+        </nav>

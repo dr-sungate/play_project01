@@ -1,0 +1,16 @@
+@(applicationId: Long, formoauthclientsearch: Form[models.TablesExtend.OauthClientsSearchRow], oauthUserList: Seq[(String, String)], agencylist: Seq[(String, String)])(implicit messages: Messages)
+
+@import helper._
+@import play.api.i18n.Messages
+@import utilities._
+@implicitFC = @{ b4.vertical.fieldConstructor }
+@{val customeurl = "data-uri"}
+
+
+
+
+	@b4.select( formoauthclientsearch("agencyId"), options = Seq("-1" -> "") ++ agencylist, '_label -> "代理店" )
+	@b4.select( formoauthclientsearch("oauthUserGuid"), options = Seq("" -> "") ++ oauthUserList, '_label -> "OauthユーザーID" )
+	@b4.text( formoauthclientsearch("oauthUserName"),'_label -> "Oauthユーザー名", 'class -> "autocomplete", Symbol("data-uri") -> admin.routes.OauthUserController.nameautocomplete(applicationId, "") )
+	@b4.text( formoauthclientsearch("clientName"),'_label -> "クライアント名", 'class -> "autocomplete_second", Symbol("data-uri") -> admin.routes.ClientController.nameautocomplete(applicationId, "") )
+  

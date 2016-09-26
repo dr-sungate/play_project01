@@ -1,0 +1,40 @@
+@(loginForm: Form[models.TablesExtend.AccountsRow])(implicit messages: Messages,request: RequestHeader)
+@import helper._
+
+@mainauth("") {
+        <div class="row">
+            <div class="col-md-4 col-md-offset-4">
+                <div class="login-panel panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">ログイン</h3>
+                    </div>
+                    <div class="panel-body @if(loginForm("email").hasErrors){has-error}">
+                     	@helper.form(action=controllers.auth.routes.LoginLogoutController.login()) {
+                            @CSRF.formField
+                            <fieldset>
+                                <div class="form-group">
+                                    <input class="form-control" placeholder="E-mail" name="loginId" type="text" value="@loginForm("loginId").value" autofocus>
+                                    @for(error <- loginForm("loginId").errors) {
+                                        <p class="text-danger" style="margin: 0">@error.message</p>
+                                    }
+                                </div>
+                                <div class="form-group @if(loginForm("password").hasErrors){has-error}">
+                                    <input class="form-control" placeholder="Password" name="password" type="password" value="">
+                                    @for(error <- loginForm("password").errors) {
+                                        <p class="text-danger" style="margin: 0">@error.message</p>
+                                    }
+                                </div>
+                                <div class="checkbox">
+                                    <label>
+                                        <input name="rememberme" type="checkbox" value="true" @if(request.session.get("rememberme")) {checked="checked"}>Remember Me
+                                    </label>
+                                </div>
+                                <input type="submit" class="btn btn-lg btn-success btn-block" value="Login"/>
+                            </fieldset>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+}

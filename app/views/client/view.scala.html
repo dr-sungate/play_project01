@@ -1,0 +1,316 @@
+@(message: String, applicationId: Long, agencyId: Long, client: models.TablesExtend.ClientsRow, contract: Option[models.TablesExtend.ContractsRow], contractaddress: Option[models.TablesExtend.ContractAddressesRow], billings: Option[(models.TablesExtend.BillingDestinationsRow,models.TablesExtend.BillingAddressesRow)], contractdetailwithprices: Seq[(models.TablesExtend.ContractDetailsRow,models.TablesExtend.ContractDetailPricesRow)], currentuser: models.TablesExtend.AccountsRow)(implicit messages: Messages,request: RequestHeader)
+@import helper._
+@implicitFC = @{ b4.horizontal.fieldConstructor("col-md-2", "col-md-12") }
+
+@main("詳細画面") {
+@views.html.globalnavi()	
+}{
+           <div class="row">
+                <div class="col-lg-12">
+                    <h2 class="page-header">クライアント管理</h2>
+                </div>
+             </div>
+           <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            詳細画面
+                        </div>
+	                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+                            <!-- Nav tabs -->
+                            <ul class="nav nav-tabs">
+                                <li class="active"><a href="#basicinfo" data-toggle="tab">基本情報</a>
+                                </li>
+                                <li><a href="#contractinfo" data-toggle="tab">契約情報</a>
+                                </li>
+                                <li><a href="#contractaddressinfo" data-toggle="tab">契約住所情報</a>
+                                </li>
+                                <li><a href="#billingdestinationinfo" data-toggle="tab">請求先情報</a>
+                                </li>
+                                <li><a href="#contractdetailinfo" data-toggle="tab">商品情報</a>
+                                </li>
+ 
+                            </ul>
+
+                            <!-- Tab panes -->
+                            <div class="tab-content">
+                                <div class="tab-pane fade in active" id="basicinfo">
+		                            <h3>基本情報  <a href="@admin.routes.ClientController.edit(applicationId, agencyId, client.id)" class="btn btn-info"><span class="glyphicon glyphicon-edit"></span> 編集</a></h3>
+		                            <div class="table-responsive clearfix">
+                               		<table class="table table-responsive table-bordered">
+	                                  <tbody>
+	                                        <tr>
+	                                            <th class="active col-xs-2 col-ms-2 col-md-2 col-lg-2">アプリ側ID</th>
+	                                            <td>@client.appClientId</td>
+	                                        </tr>
+	                                        <tr>
+	                                            <th class="active">クライアント名</th>
+	                                            <td>@client.name</td>
+	                                        </tr>
+	                                        <tr>
+	                                            <th class="active">アプリ側作成日</th>
+	                                            <td>@utilities.ViewHelper.dateFormat(client.appCreatedDate, "%tY/%<tm/%<td %<tH:%<tM:%<tS")</td>
+	                                        </tr>
+	                                        <tr>
+	                                            <th class="active">アプリ側最終ログイン</th>
+	                                            <td>@utilities.ViewHelper.dateFormat(client.lastLoginDate, "%tY/%<tm/%<td %<tH:%<tM:%<tS")</td>
+	                                        </tr>
+	                                        <tr>
+	                                            <th class="active">アプリ側最終ログインIPアドレス</th>
+	                                            <td>@client.lastLoginIpaddress</td>
+	                                        </tr>
+	                                        <tr>
+	                                            <th class="active">アプリ側ログイン回数</th>
+	                                            <td>@client.loginCount</td>
+	                                        </tr>
+	                                        <tr>
+	                                            <th class="active">権限</th>
+	                                            <td>@utilities.ViewHelper.getOptionView(client.role.getOrElse(""),utilities.ViewHelper.makeOptionMap(utilities.`type`.ClientRoleType.typeSeq, "view.client.clientroletype", messages))</td>
+	                                        </tr>
+	                                        <tr>
+	                                            <th class="active">ステータス</th>
+	                                            <td>@utilities.ViewHelper.getOptionView(client.status,utilities.ViewHelper.makeOptionMap(utilities.status.ClientStatus.statusSeq, "view.client.status", messages))</td>
+	                                        </tr>
+	                                        <tr>
+	                                            <th class="active">メモ</th>
+	                                            <td>@Html(utilities.ViewHelper.nl2br(client.memo))</td>
+	                                        </tr>
+	                                        <tr>
+	                                            <th class="active">作成日時</th>
+	                                            <td>@utilities.ViewHelper.dateFormat(client.createdDate, "%tY/%<tm/%<td %<tH:%<tM:%<tS")</td>
+	                                        </tr>
+                              			</tbody>
+                               		</table>
+                               		</div>
+ 		                            
+                                </div>
+                                 <div class="tab-pane fade" id="contractinfo">
+ 		                            <h3>契約情報  <a href="@admin.routes.ContractController.edit(applicationId, agencyId, client.id)" class="btn btn-info"><span class="glyphicon glyphicon-edit"></span> 編集</a></h3>
+		                            <div class="table-responsive clearfix">
+                                		<table class="table table-responsive table-bordered">
+	                                  <tbody>
+	                                        <tr>
+	                                            <th class="active col-xs-2 col-ms-2 col-md-2 col-lg-2">契約日</th>
+	                                            <td>@contract.map{ contract => @utilities.ViewHelper.dateFormat(contract.registedDate, "%tY/%<tm/%<td %<tH:%<tM:%<tS")}</td>
+	                                        </tr>
+	                                        <tr>
+	                                            <th class="active">有料課金開始日</th>
+	                                            <td>@contract.map{ contract => @utilities.ViewHelper.dateFormat(contract.activatedDate, "%tY/%<tm/%<td %<tH:%<tM:%<tS")}</td>
+	                                        </tr>
+	                                        <tr>
+	                                            <th class="active">解約日</th>
+	                                            <td>@contract.map{ contract => @utilities.ViewHelper.dateFormat(contract.closeDate, "%tY/%<tm/%<td %<tH:%<tM:%<tS")}</td>
+	                                        </tr>
+	                                        <tr>
+	                                            <th class="active">請求タイプ</th>
+	                                            <td>@contract.map{ contract => @utilities.ViewHelper.getOptionView(contract.invoiceIssueType.getOrElse(""),utilities.ViewHelper.makeOptionMap(utilities.`type`.InvoiceIssueType.typeSeq, "view.billingdestination.invoiceissuetype", messages))}</td>
+	                                        </tr>
+	                                        <tr>
+	                                            <th class="active">ステータス</th>
+	                                            <td>@contract.map{ contract => @utilities.ViewHelper.getOptionView(contract.status,utilities.ViewHelper.makeOptionMap(utilities.status.ContractStatus.statusSeq, "view.contract.status", messages))}</td>
+	                                        </tr>
+	                                        <tr>
+	                                            <th class="active">メモ</th>
+	                                            <td>@contract.map{ contract => @Html(utilities.ViewHelper.nl2br(contract.memo))}</td>
+	                                        </tr>
+	                                        <tr>
+	                                            <th class="active">作成日時</th>
+	                                            <td>@utilities.ViewHelper.dateFormat(client.createdDate, "%tY/%<tm/%<td %<tH:%<tM:%<tS")</td>
+	                                        </tr>
+                              			</tbody>
+                               		</table>
+                                </div>
+                                </div>
+ 
+                                <div class="tab-pane fade" id="contractaddressinfo">
+ 		                            <h3>契約住所情報  <a href="@admin.routes.ContractAddressController.edit(applicationId, agencyId, client.id)" class="btn btn-info"><span class="glyphicon glyphicon-edit"></span> 編集</a></h3>
+		                            <div class="table-responsive clearfix">
+                                		<table class="table table-responsive table-bordered">
+	                                  <tbody>
+	                                        <tr>
+	                                            <th class="active col-xs-2 col-ms-2 col-md-2 col-lg-2">会社名</th>
+	                                            <td>@contractaddress.map{ contractaddress => @contractaddress.company}</td>
+	                                        </tr>
+	                                        <tr>
+	                                            <th class="active">郵便番号</th>
+	                                            <td>@contractaddress.map{ contractaddress => @contractaddress.postCode}</td>
+	                                        </tr>
+	                                        <tr>
+	                                            <th class="active">都道府県</th>
+	                                            <td>@contractaddress.map{ contractaddress => @contractaddress.prefecture}</td>
+	                                        </tr>
+	                                        <tr>
+	                                            <th class="active">市区町村</th>
+	                                            <td>@contractaddress.map{ contractaddress => @contractaddress.city}</td>
+	                                        </tr>
+	                                        <tr>
+	                                            <th class="active">番地</th>
+	                                            <td>@contractaddress.map{ contractaddress => @contractaddress.address1}</td>
+	                                        </tr>
+	                                        <tr>
+	                                            <th class="active">住所その他</th>
+	                                            <td>@contractaddress.map{ contractaddress => @contractaddress.address2}</td>
+	                                        </tr>
+	                                        <tr>
+	                                            <th class="active">住所その他2</th>
+	                                            <td>@contractaddress.map{ contractaddress => @contractaddress.address3}</td>
+	                                        </tr>
+	                                        <tr>
+	                                            <th class="active">部署</th>
+	                                            <td>@contractaddress.map{ contractaddress => @contractaddress.depertment}</td>
+	                                        </tr>
+	                                        <tr>
+	                                            <th class="active">担当者</th>
+	                                            <td>@contractaddress.map{ contractaddress => @contractaddress.staff}</td>
+	                                        </tr>
+	                                        <tr>
+	                                            <th class="active">担当者メールアドレス</th>
+	                                            <td>@contractaddress.map{ contractaddress => @contractaddress.staffEmail}</td>
+	                                        </tr>
+	                                        <tr>
+	                                            <th class="active">電話番号</th>
+	                                            <td>@contractaddress.map{ contractaddress => @contractaddress.phone}</td>
+	                                        </tr>
+	                                        <tr>
+	                                            <th class="active">FAX番号</th>
+	                                            <td>@contractaddress.map{ contractaddress => @contractaddress.fax}</td>
+	                                        </tr>
+                             			</tbody>
+                               		</table>
+                                </div>
+                                </div>
+                               <div class="tab-pane fade" id="billingdestinationinfo">
+ 		                            <h3>請求先情報  <a href="@admin.routes.BillingDestinationController.change(applicationId, agencyId, client.id)" class="btn btn-primary"><span class="glyphicon glyphicon-edit"></span> 変更</a></h3>
+		                            <div class="table-responsive clearfix">
+                                		<table class="table table-responsive table-bordered">
+	                                  <tbody>
+	                                        <tr>
+	                                            <th class="active col-xs-2 col-ms-2 col-md-2 col-lg-2">請求先名</th>
+	                                            <td>@billings.map{ billing => @billing._1.billingDestinationName}</td>
+	                                        </tr>
+	                                        <tr>
+	                                            <th class="active">請求発行タイプ</th>
+	                                            <td>@billings.map{ billing => @utilities.ViewHelper.getOptionView(billing._1.invoiceIssueType.getOrElse(""),utilities.ViewHelper.makeOptionMap(utilities.`type`.InvoiceIssueType.typeSeq, "view.billingdestination.invoiceissuetype", messages))}</td>
+	                                        </tr>
+	                                        <tr>
+	                                            <th class="active">支払期限</th>
+	                                            <td>@billings.map{ billing => @utilities.ViewHelper.getOptionView(billing._1.dueDateMonth.getOrElse("").toString,utilities.ViewHelper.makeOptionMap(utilities.`type`.DueDateMonthType.typeSeq, "view.billingdestination.duedatemonthtype", messages))} @billings.map{ billing => @utilities.ViewHelper.getOptionView(billing._1.dueDateDay.getOrElse(-1).toString,utilities.ViewHelper.makeOptionMap(utilities.`type`.DueDateDayType.typeSeq, "view.billingdestination.duedatedaytype", messages))}</td>
+	                                        </tr>
+	                                        <tr>
+	                                            <th class="active">締日</th>
+	                                            <td>@billings.map{ billing => @utilities.ViewHelper.getOptionView(billing._1.closingDate.getOrElse(-1).toString,utilities.ViewHelper.makeOptionMap(utilities.`type`.ClosingDateType.typeSeq, "view.billingdestination.closingdatetype", messages))}</td>
+	                                        </tr>
+	                                        <tr>
+	                                            <th class="active">PCAコード</th>
+	                                            <td>@billings.map{ billing => @billing._1.pcaCode}</td>
+	                                        </tr>
+	                                        <tr>
+	                                            <th class="active">PCAコモンネーム</th>
+	                                            <td>@billings.map{ billing => @billing._1.pcaCommonName}</td>
+	                                        </tr>
+	                                        <tr>
+	                                            <th class="active">メモ</th>
+	                                            <td>@billings.map{ billing => @Html(utilities.ViewHelper.nl2br(billing._1.memo))}</td>
+	                                        </tr>
+	                                        <tr>
+	                                            <th class="active">会社名</th>
+	                                            <td>@billings.map{ billing => @billing._2.company}</td>
+	                                        </tr>
+	                                        <tr>
+	                                            <th class="active">郵便番号</th>
+	                                            <td>@billings.map{ billing => @billing._2.postCode}</td>
+	                                        </tr>
+	                                        <tr>
+	                                            <th class="active">都道府県</th>
+	                                            <td>@billings.map{ billing => @billing._2.prefecture}</td>
+	                                        </tr>
+	                                        <tr>
+	                                            <th class="active">市区町村</th>
+	                                            <td>@billings.map{ billing => @billing._2.city}</td>
+	                                        </tr>
+	                                        <tr>
+	                                            <th class="active">番地</th>
+	                                            <td>@billings.map{ billing => @billing._2.address1}</td>
+	                                        </tr>
+	                                        <tr>
+	                                            <th class="active">住所その他</th>
+	                                            <td>@billings.map{ billing => @billing._2.address2}</td>
+	                                        </tr>
+	                                        <tr>
+	                                            <th class="active">住所その他2</th>
+	                                            <td>@billings.map{ billing => @billing._2.address3}</td>
+	                                        </tr>
+	                                        <tr>
+	                                            <th class="active">部署</th>
+	                                            <td>@billings.map{ billing => @billing._2.depertment}</td>
+	                                        </tr>
+	                                        <tr>
+	                                            <th class="active">担当者</th>
+	                                            <td>@billings.map{ billing => @billing._2.staff}</td>
+	                                        </tr>
+	                                        <tr>
+	                                            <th class="active">担当者メールアドレス</th>
+	                                            <td>@billings.map{ billing => @billing._2.staffEmail}</td>
+	                                        </tr>
+	                                        <tr>
+	                                            <th class="active">電話番号</th>
+	                                            <td>@billings.map{ billing => @billing._2.phone}</td>
+	                                        </tr>
+	                                        <tr>
+	                                            <th class="active">FAX番号</th>
+	                                            <td>@billings.map{ billing => @billing._2.fax}</td>
+	                                        </tr>
+                             			</tbody>
+                               		</table>
+                                </div>
+                                </div>
+                                <div class="tab-pane fade" id="contractdetailinfo">
+		                            <h3>商品情報  <a href="@admin.routes.ContractDetailController.add(applicationId, agencyId, client.id)" class="btn btn-success"><span class="glyphicon glyphicon-save-file"></span> 新規追加</a></h3>
+		                            <div class="table-responsive clearfix">
+                                         <table class="table table-hover table-condensed">
+	                                       <thead>
+	                                        <tr>
+	                                            <th>アプリ側商品ID</th>
+	                                            <th>商品名</th>
+	                                            <th>商品タイプ</th>
+	                                            <th>単価</th>
+	                                            <th>数量</th>
+	                                            <th>メモ</th>
+	                                            <th></th>
+	                                            <th></th>
+	                                        </tr>
+	                                    </thead>
+	                                    <tbody>
+	                                    @for((contractdetail, contractdetailprice) <- contractdetailwithprices) {
+	                                    <tr class="odd">
+                                          <td>@contractdetail.appProductId</td>
+                                          <td>@contractdetail.productName</td>
+                                          <td>@utilities.ViewHelper.getOptionView(contractdetail.productType.getOrElse(""),utilities.ViewHelper.makeOptionMap(utilities.`type`.ProductType.typeSeq, "view.defaultproduct.producttype", messages))</td>
+                                          <td>@utilities.ViewHelper.currencyFormat(contractdetailprice.unitPrice)</td>
+                                          <td>@contractdetailprice.quantity</td>
+                                          <td>@Html(utilities.ViewHelper.nl2br(contractdetail.memo))</td>
+                                          <td><a href="@admin.routes.ContractDetailController.edit(applicationId, agencyId, client.id, contractdetail.id)" class="btn btn-outline btn-success btn-xs"><span class="glyphicon glyphicon-edit"></span> 編集</a></td>
+                                          <td>@b4.inline.form(action=admin.routes.ContractDetailController.delete(applicationId, agencyId, client.id, contractdetail.id)) {implicit ifc =>
+                                              @CSRF.formField
+                                              @b4.submit('class -> "btn btn-outline btn-warning btn-xs", 'onclick -> "return confirm(\"削除してよろしいですか？\");" ){<span class="glyphicon glyphicon-remove-sign"></span> 削除}}</td>
+                                        </tr>
+                                        }
+                                   </tbody>
+                                </table>
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+  <div class="well">
+<a href="@admin.routes.ClientController.index(applicationId, 1)" class="btn btn-default btn-lg"><span class="glyphicon glyphicon-list"></span>一覧</a>
+</div>
+                        <!-- /.panel-body -->
+                    </div>
+                    <!-- /.panel -->
+                </div>
+ 
+
+
+ 
+ }

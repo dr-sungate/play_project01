@@ -1,0 +1,40 @@
+@(formbillingdestination: Form[models.TablesExtend.BillingDestinationsBillingAddressesRow])(implicit messages: Messages)
+
+@import helper._
+@import play.api.i18n.Messages
+@import utilities._
+@implicitFC = @{ b4.horizontal.fieldConstructor("col-md-4", "col-md-8") }
+
+@if(formbillingdestination.hasErrors) {
+	@*
+<div class="form-group">
+    <div class="alert alert-danger col-lg-6 text-center">
+       @for(error <- formbillingdestination.errors){
+         @error<br />
+       }
+   </div>
+</div>
+*@
+}
+
+	@b4.text( formbillingdestination("billingDestinationName"), '_label -> "請求先名", 'placeholder -> "〇〇●商事", '_showIconWarning -> true)
+	@b4.select( formbillingdestination("invoiceIssueType"), options = utilities.ViewHelper.makeOptionSeq(utilities.`type`.InvoiceIssueType.typeSeq, "view.billingdestination.invoiceissuetype", messages), '_label -> "請求書発行タイプ" )
+	@b4.select( formbillingdestination("dueDateMonth"), options = utilities.ViewHelper.makeOptionSeq(utilities.`type`.DueDateMonthType.typeSeq, "view.billingdestination.duedatemonthtype", messages), '_label -> "支払期限月" )
+	@b4.select( formbillingdestination("dueDateDay"), options = utilities.ViewHelper.makeOptionSeq(utilities.`type`.DueDateDayType.typeSeq, "view.billingdestination.duedatedaytype", messages), '_label -> "支払期限日" )
+	@b4.select( formbillingdestination("closingDate"), options = utilities.ViewHelper.makeOptionSeq(utilities.`type`.ClosingDateType.typeSeq, "view.billingdestination.closingdatetype", messages), '_label -> "締日" )
+	@b4.text( formbillingdestination("pcaCode"), '_label -> "PCAコード", 'placeholder -> "" )
+	@b4.text( formbillingdestination("pcaCommonName"), '_label -> "PCAコモンネーム", 'placeholder -> "" )
+	@b4.textarea( formbillingdestination("memo"), '_label -> "メモ", 'placeholder -> "" )
+	@b4.text( formbillingdestination("billingAddresses.company"), '_label -> "会社名", 'placeholder -> "株式会社イー・エージェンシー" , '_showIconWarning -> true)
+	@b4.text( formbillingdestination("billingAddresses.postCode"), '_label -> "郵便番号", 'placeholder -> "100−0001" )
+	@b4.text( formbillingdestination("billingAddresses.prefecture"), '_label -> "都道府県", 'placeholder -> "東京都" )
+	@b4.text( formbillingdestination("billingAddresses.city"), '_label -> "市区町村", 'placeholder -> "千代田区" )
+	@b4.text( formbillingdestination("billingAddresses.address1"), '_label -> "住所1", 'placeholder -> "有楽町1−1−1" )
+	@b4.text( formbillingdestination("billingAddresses.address2"), '_label -> "住所2", 'placeholder -> "" )
+	@b4.text( formbillingdestination("billingAddresses.address3"), '_label -> "住所3", 'placeholder -> "" )
+	@b4.text( formbillingdestination("billingAddresses.depertment"), '_label -> "部署", 'placeholder -> "営業部" )
+	@b4.text( formbillingdestination("billingAddresses.staff"), '_label -> "担当者", 'placeholder -> "佐藤一郎" )
+	@b4.text( formbillingdestination("billingAddresses.staffEmail"), '_label -> "担当者メール", 'placeholder -> "xxx@xxx.xx" )
+	@b4.text( formbillingdestination("billingAddresses.phone"), '_label -> "電話番号", 'placeholder -> "03-0000-0000" )
+	@b4.text( formbillingdestination("billingAddresses.fax"), '_label -> "FAX番号", 'placeholder -> "03-0000-0000" )
+ 

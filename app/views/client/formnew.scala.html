@@ -1,0 +1,45 @@
+@(formclient: Form[models.TablesExtend.ClientsContractsRow], applicationId: Long, agencyList: Seq[(String, String)])(implicit messages: Messages)
+
+@import helper._
+@import play.api.i18n.Messages
+@import utilities._
+@implicitFC = @{ b4.horizontal.fieldConstructor("col-md-4", "col-md-8") }
+
+@if(formclient.hasErrors) {
+
+<div class="form-group">
+    <div class="alert alert-danger col-lg-6 text-center">
+       @for(error <- formclient.errors){
+         @error<br />
+       }
+   </div>
+</div>
+
+}
+
+
+	@b4.select( formclient("agencyId"), options = agencyList, '_label -> "代理店" )
+	@b4.text( formclient("appClientId"), '_label -> "アプリ側ID", 'placeholder -> "" , '_showIconWarning -> true)
+	@b4.text( formclient("name"), '_label -> "名前", 'placeholder -> "山田太郎" , '_showIconWarning -> true)
+	@b4.email( formclient("email"), '_label -> "メール", 'placeholder -> "eee@eee.kk" )
+	@b4.select( formclient("role"), options = utilities.ViewHelper.makeOptionSeq(utilities.`type`.ClientRoleType.typeSeq, "view.client.clientroletype", messages), '_label -> "権限" )
+ 	@b4.textarea( formclient("memo"), '_label -> "クライアントメモ", 'placeholder -> "" )
+ 
+	@b4.date( formclient("contract.registedDate"),'_label -> "契約日")
+	@b4.date( formclient("contract.activatedDate"),'_label -> "有料契約開始日")
+	@b4.date( formclient("contract.closeDate"),'_label -> "解約日")
+  	@b4.textarea( formclient("contract.memo"), '_label -> "契約メモ", 'placeholder -> "" )
+ 
+ 	@b4.text( formclient("contractAddress.company"), '_label -> "会社名", 'placeholder -> "株式会社イー・エージェンシー" , '_showIconWarning -> true)
+	@b4.text( formclient("contractAddress.postCode"), '_label -> "郵便番号", 'placeholder -> "100−0001" )
+	@b4.text( formclient("contractAddress.prefecture"), '_label -> "都道府県", 'placeholder -> "東京都" )
+	@b4.text( formclient("contractAddress.city"), '_label -> "市区町村", 'placeholder -> "千代田区" )
+	@b4.text( formclient("contractAddress.address1"), '_label -> "住所1", 'placeholder -> "有楽町1−1−1" )
+	@b4.text( formclient("contractAddress.address2"), '_label -> "住所2", 'placeholder -> "" )
+	@b4.text( formclient("contractAddress.address3"), '_label -> "住所3", 'placeholder -> "" )
+	@b4.text( formclient("contractAddress.depertment"), '_label -> "部署", 'placeholder -> "営業部" )
+	@b4.text( formclient("contractAddress.staff"), '_label -> "担当者", 'placeholder -> "佐藤一郎" )
+	@b4.text( formclient("contractAddress.staffEmail"), '_label -> "担当者メール", 'placeholder -> "xxx@xxx.xx" )
+	@b4.text( formclient("contractAddress.phone"), '_label -> "電話番号", 'placeholder -> "03-0000-0000" )
+	@b4.text( formclient("contractAddress.fax"), '_label -> "FAX番号", 'placeholder -> "03-0000-0000" )
+ 

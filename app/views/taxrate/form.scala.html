@@ -1,0 +1,20 @@
+@(formtaxrate: Form[models.TablesExtend.TaxRatesRow])(implicit messages: Messages)
+
+@import helper._
+@import play.api.i18n.Messages
+@implicitFC = @{ b4.vertical.fieldConstructor }
+@if(formtaxrate.hasErrors) {
+@*
+<div class="form-group">
+    <div class="alert alert-danger col-lg-6 text-center">
+       @for(error <- formtaxrate.errors){
+         @error<br />
+       }
+   </div>
+</div>
+*@
+}
+
+	@b4.text( formtaxrate("taxRate"), '_label -> "税率", 'placeholder -> "" , '_showIconWarning -> true)
+	@b4.datetimeLocal( formtaxrate("startFrom"),'_label -> "適用開始日時" , '_showIconWarning -> true)
+ 
